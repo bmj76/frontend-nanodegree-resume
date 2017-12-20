@@ -61,10 +61,10 @@ var bio = {
 			$("#header").append(HTMLskillsStart);
 			
 			var formattedSkills = [];
-			for (var key in bio.skills) {
-				var formattedItem = HTMLskills.replace("%data%", bio.skills[key]);
+			$.each(bio.skills, function(key,value) {
+				var formattedItem = HTMLskills.replace("%data%", value);
 				formattedSkills.push(formattedItem);	
-			}
+			});
 			$("#skills").append(formattedSkills);
 		}
 		
@@ -117,17 +117,17 @@ var education = {
 	display: function() {
 		$('#education').append(HTMLschoolStart);
 		var formattedSchools = [];
-		for (var key in education.schools) {
-			var formattedItem = HTMLschoolName.replace("%data%",education.schools[key].name);
-			formattedItem += HTMLschoolDegree.replace("%data%",education.schools[key].degree);
-			formattedItem += HTMLschoolDates.replace("%data%",education.schools[key].dates);
-			formattedItem += HTMLschoolLocation.replace("%data%",education.schools[key].location);
-			for (var major in education.schools[key].majors) {
-				formattedItem += HTMLschoolMajor.replace("%data%",education.schools[key].majors[major]);
-			}
+		$.each(education.schools, function(key,value) {
+			var formattedItem = HTMLschoolName.replace("%data%",value.name);
+			formattedItem += HTMLschoolDegree.replace("%data%",value.degree);
+			formattedItem += HTMLschoolDates.replace("%data%",value.dates);
+			formattedItem += HTMLschoolLocation.replace("%data%",value.location);
+			$.each(value.majors, function(key,value) {
+				formattedItem += HTMLschoolMajor.replace("%data%",value);
+			});
 			formattedSchools.push(formattedItem);
 			
-		}
+		});
 
 		$('.education-entry:last').append(formattedSchools);
 
@@ -135,16 +135,13 @@ var education = {
 			$('#education').append(HTMLschoolStart);
 			$('.education-entry:last').append(HTMLonlineClasses);
 			var formattedOnlineCourses = [];
-			for (var key in education.onlineCourses)
-			{
-				var formattedItem = HTMLonlineTitle.replace("%data%",education.onlineCourses[key].title);
-				formattedItem += HTMLonlineSchool.replace("%data%",education.onlineCourses[key].school);
-				formattedItem += HTMLonlineDates.replace("%data%",education.onlineCourses[key].dates);
-				formattedItem += HTMLonlineURL.replace("%data%",education.onlineCourses[key].url);
-
-				
+			$.each(education.onlineCourses, function(key,value) {
+				var formattedItem = HTMLonlineTitle.replace("%data%",value.title);
+				formattedItem += HTMLonlineSchool.replace("%data%",value.school);
+				formattedItem += HTMLonlineDates.replace("%data%",value.dates);
+				formattedItem += HTMLonlineURL.replace("%data%",value.url);		
 				formattedOnlineCourses.push(formattedItem);
-			}
+			});
 		}
 
 		$('.education-entry:last').append(formattedOnlineCourses);
@@ -193,19 +190,18 @@ var work = {
 	display: function() {
 		$('#workExperience').append(HTMLworkStart);
 
-		for (job in work.jobs) {
-		
-			var formattedEmployer = HTMLworkEmployer.replace("%data%",work.jobs[job].employer);
-			var formattedTitle = HTMLworkTitle.replace("%data%",work.jobs[job].title);
+		$.each(work.jobs, function(key,value) {
+			var formattedEmployer = HTMLworkEmployer.replace("%data%",value.employer);
+			var formattedTitle = HTMLworkTitle.replace("%data%",value.title);
 			var formattedEmployerTitle = formattedEmployer + formattedTitle;
 			$(".work-entry:last").append(formattedEmployerTitle);
 			
-			var formattedDates = HTMLworkDates.replace("%data%", work.jobs[job].dates);
+			var formattedDates = HTMLworkDates.replace("%data%", value.dates);
 			$(".work-entry:last").append(formattedDates);
 
-			var formattedDescription = HTMLworkDescription.replace("%data%",work.jobs[job].descripton);
+			var formattedDescription = HTMLworkDescription.replace("%data%",value.descripton);
 			$(".work-entry:last").append(formattedDescription);
-		}
+		});
 
 		
 	},
@@ -217,7 +213,7 @@ var work = {
 };
 
 var projects = {
-	project: [
+	projects: [
 		{
 			title: "Sample Project 1",
 			dates: "2017",
@@ -233,25 +229,20 @@ var projects = {
 	],
 
 	display: function () {
-		for (key in projects.project) {
+		$.each(projects.projects, function(key,value) {
 			$("#projects").append(HTMLprojectStart);
+			var formattedTitle = HTMLprojectTitle.replace("%data%", value.title);
+			var formattedDates = HTMLprojectDates.replace("%data%", value.dates);
+			var formattedDescription = HTMLprojectDescription.replace("%data%", value.description);
+			$(".project-entry:last").append(formattedTitle, formattedDates, formattedDescription);
 
-			var formattedTitle = HTMLprojectTitle.replace("%data%", projects.project[key].title);
-			$(".project-entry:last").append(formattedTitle);
-
-			var formattedDates = HTMLprojectDates.replace("%data%", projects.project[key].dates);
-			$(".project-entry:last").append(formattedDates);
-
-			var formattedDescription = HTMLprojectDescription.replace("%data%", projects.project[key].description);
-			$(".project-entry:last").append(formattedDescription);
-
-			if (projects.project[key].images.length > 0) {
-				for (image in projects.project[key].images) {
-					var formattedImage = HTMLprojectImage.replace("%data%", projects.project[key].images[image]);
+			if (value.images.length > 0) {
+				$.each(value.images, function(key,value) {
+					var formattedImage = HTMLprojectImage.replace("%data%", value);
 					$(".project-entry:last").append(formattedImage);
-				}
+				});
 			}
-		}
+		});
 	},
 
 	debug: function () {
@@ -262,10 +253,10 @@ var projects = {
 function locationizer (work_obj) {
 	var locationArray = [];
 
-	for (job in work_obj.jobs) {
-		var newLocation = work_obj.jobs[job].location;
+	$.each(work_obj.jobs, function(key,value) {
+		var newLocation = value.location;
 		locationArray.push(newLocation);
-	}
+	});
 
 	return locationArray;
 }
